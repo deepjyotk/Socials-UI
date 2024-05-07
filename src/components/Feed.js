@@ -35,6 +35,10 @@ function Feed() {
     console.log(`Liked post with ID: ${postId}`);
   };
 
+  const handleComment = (postId) => {
+    console.log(`Commented post with ID: ${postId}`)
+  }
+
   const renderComments = (comments) => {
     return comments.map(comment => (
       <div key={comment.Username} className="Comment">
@@ -43,6 +47,8 @@ function Feed() {
     ));
   };
 
+  // instagram has avatars, since we dont have them right now, I only added usernames
+
   return (
     <div className="App">
       <div className="Header">
@@ -50,20 +56,26 @@ function Feed() {
         <input type="text" placeholder="Search" />
       </div>
       <div className="Posts">
-        {dummyTimeline.map(post => (
-          <div key={post.ID} className="Post">
-            <img src={post.Image} alt="post" />
-            <div className="Interactions">
-              <button className="LikeButton" onClick={() => handleLike(post.ID)}>Like</button>
-              <div className="Likes">{post.Likes.length} likes</div>
-            </div>
-            <div className="Caption">{post.Caption}</div>
-            <div className="Comments">
-              {renderComments(post.Comments)}
-            </div>
+      {dummyTimeline.map(post => (
+        <div key={post.ID} className="Post">
+          <div className="PostHeader">
+              <span className="Username">{post.Username}</span>
+              <div className="Logo"> 
+                <img src="logo.png" alt="logo img" />
+              </div>
           </div>
-        ))}
-      </div>
+          <img src={post.Image} alt="post" />
+          <div className="Interactions">
+            <button className="LikeButton" onClick={() => handleLike(post.ID)}>❤️{post.Likes.length}</button>
+            <button className="CommentButton" onClick={() => handleComment(post.ID)}>💬{post.Comments.length}</button>
+          </div>
+          <div className="Caption">{post.Caption}</div>
+          <div className="Comments">
+            {renderComments(post.Comments)}
+          </div>
+        </div>
+      ))}
+    </div>
     </div>
   );
 }

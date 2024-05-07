@@ -1,0 +1,75 @@
+/* Feed.css */
+.App {
+  font-family: Arial, sans-serif;
+}
+
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.Header img {
+  height: 40px;
+}
+
+.Posts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.Post {
+  margin: 20px;
+  padding: 0;
+  border: 1px solid #dbdbdb;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  width: 300px;
+}
+
+.Post img {
+  width: 100%;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.Interactions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.LikeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #262626;
+  font-weight: bold;
+}
+
+.Likes {
+  color: #262626;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.Caption {
+  padding: 10px;
+  font-size: 14px;
+}
+
+.Comments {
+  padding: 0 10px;
+  font-size: 14px;
+  color: #262626;
+}
+
+.Comment {
+  margin-top: 5px;
+  font-size: 14px;
+}

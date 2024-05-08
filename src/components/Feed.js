@@ -81,6 +81,27 @@ function Feed() {
       </>
     );
   };
+
+  const handlePhotoDoubleClick = (postId) => {
+    const updatedPosts = posts.map(post => {
+      if (post.ID === postId) {
+        let newLikes;
+        if (post.likedByCurrentUser) {
+          newLikes = post.Likes.length - 1; 
+        } else {
+          newLikes = post.Likes.length + 1; 
+        }
+        return {
+          ...post,
+          Likes: Array(newLikes).fill({Username: "dummy"}), 
+          likedByCurrentUser: !post.likedByCurrentUser 
+        };
+      }
+      return post;
+    });
+    setPosts(updatedPosts);
+  };
+  
   
 
   return (
@@ -98,7 +119,11 @@ function Feed() {
                 <img src="logo.png" alt="logo img" />
               </div>
             </div>
-            <img src={post.Image} alt="post" />
+            <img 
+            src={post.Image} 
+            alt="post"
+            onDoubleClick={() => handlePhotoDoubleClick(post.ID)}
+            style={{ cursor: 'pointer' }} />
             <div className="Interactions">
               <button className="LikeButton" onClick={() => handleLike(post.ID)}>
                 ❤️{post.Likes.length}

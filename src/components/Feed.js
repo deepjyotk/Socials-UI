@@ -1,7 +1,10 @@
 // App.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles/Feed.css';
 import CommentPopup from './CommentPopup.js';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 const dummyTimeline = [
   {
@@ -34,9 +37,71 @@ function Feed() {
   const [posts, setPosts] = useState(dummyTimeline); // Use a state to manage posts for reactivity
   const [popupPostId, setPopupPostId] = useState(null); // null when no popup is shown
 
-  const handleLike = (postId) => {
-    console.log(`Liked post with ID: ${postId}`); // Future: Implement actual like functionality
+  useEffect(() => {
+    const userId = localStorage.getItem('userId'); // Assume the user's ID is stored in localStorage
+    axios.get(`/api/feed/${userId}`)
+      .then(response => {
+        const postsWithLikeStatus = response.data.map(post => ({
+          ...post,
+          likedByCurrentUser: post.Likes.some(like => like.Username === localStorage.getItem('username'))
+        }));
+        setPosts(postsWithLikeStatus);
+      })
+      .catch(error => {
+        console.error('Error fetching posts', error);
+      });
+  }, []);
+
+
+  const toggleLike = (postId) => {
+    const postIndex = posts.findIndex(post => post.ID === postId);
+    if (postIndex === -1) return; // Post not found
+
+    const post = posts[postIndex];
+    const currentUser = "user1";// localStorage.getItem('username'); // Get the current logged-in user's username
+    const hasLiked = post.Likes.some(like => like.Username === currentUser);
+    const updatedLikes = hasLiked
+      ? post.Likes.filter(like => like.Username !== currentUser)
+      : [...post.Likes, { Username: currentUser }];
+
+    const updatedPosts = [...posts];
+    updatedPosts[postIndex] = {
+      ...post,
+      Likes: updatedLikes
+    };
+    setPosts(updatedPosts);
+    /*
+
+    
+
+    axios.post(`/api/likes/${postId}`, { like: !hasLiked })
+      .then(response => {
+        // Assuming the API returns the entire updated post or just the updated likes array
+        const updatedPosts = [...posts];
+        updatedPosts[postIndex] = {
+          ...post,
+          Likes: response.data.Likes, // assuming response.data.Likes contains the new likes array
+          likedByCurrentUser: !hasLiked
+        };
+        setPosts(updatedPosts);
+      })
+      .catch(error => {
+        console.error('Error toggling like', error);
+      });*/
   };
+
+  const isLikedByCurrentUser = (post) => {
+    const currentUser = "user1"; // Simulating logged-in user
+    return post.Likes.some(like => like.Username === currentUser);
+  };
+
+  /*
+  const isLikedByCurrentUser = (post) => {
+    const currentUser = localStorage.getItem('username');
+    return post.Likes.some(like => like.Username === currentUser);
+  };
+  */
+  
 
   const handleCommentClick = (postId) => {
     setPopupPostId(postId); // Set the current post ID for which the popup should be visible
@@ -80,28 +145,7 @@ function Feed() {
         )}
       </>
     );
-  };
-
-  const handlePhotoDoubleClick = (postId) => {
-    const updatedPosts = posts.map(post => {
-      if (post.ID === postId) {
-        let newLikes;
-        if (post.likedByCurrentUser) {
-          newLikes = post.Likes.length - 1; 
-        } else {
-          newLikes = post.Likes.length + 1; 
-        }
-        return {
-          ...post,
-          Likes: Array(newLikes).fill({Username: "dummy"}), 
-          likedByCurrentUser: !post.likedByCurrentUser 
-        };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-  
+  }; 
   
 
   return (
@@ -114,7 +158,7 @@ function Feed() {
         {posts.map(post => (
           <div key={post.ID} className="Post">
             <div className="PostHeader">
-              <span className="Username">{post.Username}</span>
+            <Link to={`/profile/${post.Username}`} className="Username">{post.Username}</Link>
               <div className="Logo">
                 <img src="logo.png" alt="logo img" />
               </div>
@@ -122,11 +166,12 @@ function Feed() {
             <img 
             src={post.Image} 
             alt="post"
-            onDoubleClick={() => handlePhotoDoubleClick(post.ID)}
-            style={{ cursor: 'pointer' }} />
+            onDoubleClick={() => toggleLike(post.ID)}
+            style={{ cursor: 'pointer' }} 
+            />
             <div className="Interactions">
-              <button className="LikeButton" onClick={() => handleLike(post.ID)}>
-                ❤️{post.Likes.length}
+              <button className="LikeButton" onClick={() => toggleLike(post.ID)}>
+                {isLikedByCurrentUser(post) ? '❤️' : '♡'} {post.Likes.length}
               </button>
               <button className="CommentButton" onClick={() => handleCommentClick(post.ID)}>
                 💬{post.Comments.length}

@@ -15,6 +15,8 @@ import { faComments, faHeart, faHome } from '@fortawesome/free-solid-svg-icons';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 
+import { useParams } from 'react-router-dom';
+
 let images = [
     'https://d2xa19dgrtgu1f.cloudfront.net/72d10c-238e-7470-f14-8febbb3d7af.jpg',
   ];
@@ -35,7 +37,8 @@ class Profile extends Component {
       lightBox: false,
       followers: 0,
       following: 0,
-      followerData : []
+      followerData : [],
+      isFollowing: false
     };
 
     this.submitPost = this.submitPost.bind(this);
@@ -48,8 +51,13 @@ class Profile extends Component {
 
   };
 
+  
+
 
   componentDidMount(){
+    // Simulate user login for testing
+    localStorage.setItem("Username", "user1");
+
 
     if(localStorage.getItem("Username")){
         //window.location.href = "/feed";
@@ -98,8 +106,8 @@ class Profile extends Component {
             console.log(data);
             try{
             if(data.responseJSON){
-                if(data.responseJSON.length==1){
-                    if(Object.keys(data.responseJSON[0]).length==0){
+                if(data.responseJSON.length===1){
+                    if(Object.keys(data.responseJSON[0]).length===0){
                         _this.setState({
                             "followers": 0 ,
                             "followerData" : []
@@ -137,8 +145,8 @@ class Profile extends Component {
             console.log(data);            console.log(data);
             try{
             if(data.responseJSON){
-                if(data.responseJSON.length==1){
-                    if(Object.keys(data.responseJSON[0]).length==0){
+                if(data.responseJSON.length===1){
+                    if(Object.keys(data.responseJSON[0]).length===0){
                         _this.setState({
                             "following": 0 
                         });
@@ -196,7 +204,7 @@ class Profile extends Component {
             secretAccessKey:  process.env.REACT_APP_BUCKET_SECRET
         }
          
-        if(document.querySelector("#name").files.length==0        )
+        if(document.querySelector("#name").files.length===0        )
         {
             alert("Please select a file...");
             return;
@@ -311,6 +319,21 @@ class Profile extends Component {
     //REACT_APP_FOLLOW_WRITE
   }
 
+  handleAvatarChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        // Optionally, preview the image
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.setState({ avatarURL: e.target.result });
+        };
+        reader.readAsDataURL(file);
+
+        // upload to server
+    }
+}
+
+
 
   render() {
 
@@ -326,11 +349,19 @@ class Profile extends Component {
 
     <div class="profile">
 
-        <div class="profile-image">
+    <div className="profile-image">
+    <input
+        type="file"
+        id="avatar-upload"
+        style={{ display: 'none' }}
+        onChange={this.handleAvatarChange}
+        accept="image/*"  // This restricts file inputs to image types
+    />
+    <label htmlFor="avatar-upload">
+        <img src={this.state.avatarURL || "https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg"} alt="Profile" />
+    </label>
+</div>
 
-            <img src="https://p7.hiclipart.com/preview/355/848/997/computer-icons-user-profile-google-account-photos-icon-account.jpg" alt="" />
-
-        </div>
 
         <div class="profile-user-settings">
 
@@ -386,7 +417,7 @@ class Profile extends Component {
 
                     {/* <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=500&h=500&fit=crop" class="gallery-image" alt=""/> */}
                     {
-                        number.Image.indexOf("http") == -1
+                        number.Image.indexOf("http") === -1
                         ? (<img src="https://wolper.com.au/wp-content/uploads/2017/10/image-placeholder.jpg" class="gallery-image" alt=""  onClick={()=>this.showImage("https://wolper.com.au/wp-content/uploads/2017/10/image-placeholder.jpg")} />)
                         : (
                             <React.Fragment>
@@ -455,19 +486,7 @@ class Profile extends Component {
         {this.state.lightBox && (
           <Lightbox
             mainSrc={images[photoIndex]}
-            // nextSrc={images[(photoIndex + 1) % images.length]}
-            // prevSrc={images[(photoIndex + images.length - 1) % images.length]}
             onCloseRequest={() => this.setState({ lightBox: false })}
-            // onMovePrevRequest={() =>
-            //   this.setState({
-            //     photoIndex: (photoIndex + images.length - 1) % images.length,
-            //   })
-            // }
-            // onMoveNextRequest={() =>
-            //   this.setState({
-            //     photoIndex: (photoIndex + 1) % images.length,
-            //   })
-            // }
           />
         )}
 

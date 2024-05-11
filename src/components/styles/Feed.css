@@ -156,3 +156,12 @@
 .comment-button-close:hover {
   background-color: #ff7f50;
 }
+
+/* Add specific styles for the search component if needed */
+.UserSearch input {
+  padding: 8px;
+  margin-left: 20px;
+  width: 300px; 
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

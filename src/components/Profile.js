@@ -11,11 +11,13 @@ const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '', avatar: '' });
+  const [newAvatar, setNewAvatar] = useState(null);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [posts, setPosts] = useState([]);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const fileInputRef = React.createRef();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -39,6 +41,25 @@ const Profile = () => {
     fetchProfile();
   }, [id]);
 
+  const handleAvatarClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserProfile(prevState => ({
+          ...prevState,
+          avatar: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+      setNewAvatar(file); // Optionally, you could upload this file to your server here
+    }
+  };
+
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
     setOpenLightbox(true);
@@ -51,7 +72,8 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" />
+        <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" onClick={handleAvatarClick} />
+        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} accept="image/jpeg, image/png, image/jpg"/>
         <div className="profile-info">
           <h1>{userProfile.username}</h1>
           <button className="btn follow-btn">Follow</button>

@@ -4,6 +4,7 @@ import './styles/Feed.css';
 import CommentPopup from './CommentPopup.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import UserSearch from './Search';
 
 
 const dummyTimeline = [
@@ -152,7 +153,8 @@ function Feed() {
     <div className="App">
       <div className="Header">
         <img src="/socials-logo-2.png" alt="Instagram" />
-        <input type="text" placeholder="Search" />
+        <Link to={`/profile/${localStorage.getItem('userId')}`} className="ProfileLink">My Profile</Link>
+        <UserSearch />
       </div>
       <div className="Posts">
         {posts.map(post => (

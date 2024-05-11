@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './styles/Login.css';
 import api from '../config/axialConfig';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ history }) => {
+
+const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -10,9 +13,9 @@ const Login = ({ history }) => {
 
   useEffect(() => {
     if (localStorage.getItem("Username")) {
-      history.push("/feed");
+      navigate("/feed");
     }
-  }, [history]);
+  }, [navigate]);
 
   const validateInput = () => {
     let isValid = true;
@@ -52,7 +55,7 @@ const Login = ({ history }) => {
   
         if (response.status === 200) {
           localStorage.setItem("Email", email);
-          history.push("/feed");
+          navigate.push("/feed");
         }
       } catch (error) {
         if (error.response) {
@@ -64,7 +67,7 @@ const Login = ({ history }) => {
               }
             });
             if (requestOtpResponse.status === 200) {
-              history.push({pathname: "/otpinput", state:{email: email}});
+              navigate.push({pathname: "/otpinput", state:{email: email}});
             }
           } else {
             setDbErrors("Something went wrong: " + error.response.data['message']); // Display specific backend error message if available

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import api from '../config/axialConfig' ;
 import {  useLocation } from 'react-router-dom';
 
@@ -9,7 +9,7 @@ function OTPInput() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [timer, setTimer] = useState(60);
-  const history = useHistory();
+  const history = useNavigate();
   const location = useLocation();
   const email = location.state?.email; 
 

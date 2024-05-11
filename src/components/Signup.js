@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [dbErrors, setDbErrors] = useState("");
 
-  const history = useHistory();
+  const history = useNavigate();
 
   const validateInput = () => {
     const { firstname, lastname, email, password } = formData;

@@ -9,7 +9,7 @@ let lgt =  function(){
 
 function App() {
   return (
-        <BrowserRouter>
+      
           <div>
             <Main />
             
@@ -20,7 +20,7 @@ function App() {
             </div>): null 
             }
           </div>
-        </BrowserRouter>
+       
   );
 }
 

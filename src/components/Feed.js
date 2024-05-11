@@ -151,7 +151,7 @@ function Feed() {
   return (
     <div className="App">
       <div className="Header">
-        <img src="socials-logo-2.png" alt="Instagram" />
+        <img src="/socials-logo-2.png" alt="Instagram" />
         <input type="text" placeholder="Search" />
       </div>
       <div className="Posts">
@@ -160,7 +160,7 @@ function Feed() {
             <div className="PostHeader">
             <Link to={`/profile/${post.Username}`} className="Username">{post.Username}</Link>
               <div className="Logo">
-                <img src="logo.png" alt="logo img" />
+                <img src="/logo.png" alt="logo img" />
               </div>
             </div>
             <img 

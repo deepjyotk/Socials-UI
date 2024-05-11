@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import api from '../config/axialConfig'
+import api from '../config/axialConfig' ;
+import {  useLocation } from 'react-router-dom';
 
 
-function OTPInput({email}) {
+
+function OTPInput() {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [buttonDisabled, setButtonDisabled] = useState(true);
   const [timer, setTimer] = useState(60);
   const history = useHistory();
+  const location = useLocation();
+  const email = location.state?.email; 
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -51,7 +54,7 @@ function OTPInput({email}) {
 
       if (response.status === 200) {
         // Assuming 'push' is the path you want to navigate to after successful OTP
-        history.push("/push");
+        history.replace("/feed");
       }
     } catch (error) {
       alert("Failed to verify OTP. Please try again.");

@@ -8,9 +8,6 @@ let lgt =  function(){
 }
 
 function App() {
-
-
-
   return (
         <BrowserRouter>
           <div>
@@ -25,7 +22,6 @@ function App() {
           </div>
         </BrowserRouter>
   );
-
 }
 
 export default App;

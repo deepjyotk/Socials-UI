@@ -70,11 +70,12 @@ const Login = () => {
         if (response.status === 200) {
           const now = new Date();
           const expirationTime = new Date(now.getTime() + 60 * 60 * 1000);
+          console.log(expirationTime);
 
           localStorage.setItem("Email", email);
           localStorage.setItem("Token_id", response.data.Token_id);
           localStorage.setItem("Expiration", expirationTime.toISOString());
-          navigate.push("/feed");
+          navigate("/feed");
         }
       } catch (error) {
         if (error.response) {
@@ -86,7 +87,7 @@ const Login = () => {
               }
             });
             if (requestOtpResponse.status === 200) {
-              navigate.push({pathname: "/otpinput", state:{email: email}});
+              navigate({pathname: "/otpinput", state:{email: email}});
             }
           } else {
             setDbErrors("Something went wrong: " + error.response.data['message']); // Display specific backend error message if available

@@ -12,13 +12,6 @@ function App() {
       
           <div>
             <Main />
-            
-            {
-            window.localStorage.getItem("Username") ?
-              (<div className="lgt" onClick={lgt}>
-              Logout
-            </div>): null 
-            }
           </div>
        
   );

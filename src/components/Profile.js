@@ -69,6 +69,13 @@ const Profile = () => {
     setOpenLightbox(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("Email");
+    localStorage.removeItem("Token_id")
+    localStorage.removeItem("Expiration");
+    navigate("/login");
+  };
+
   return (
     <div className="profile-container">
       <header className="profile-header">
@@ -109,6 +116,7 @@ const Profile = () => {
           }
         />
       )}
+      <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div>
       <div className="home-button" onClick={() => navigate('/feed')}>
         <FontAwesomeIcon icon={faHome} size="2x" />
       </div>

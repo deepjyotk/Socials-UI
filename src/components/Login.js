@@ -12,8 +12,10 @@ const Login = () => {
   const [dbErrors, setDbErrors] = useState('');
 
   useEffect(() => {
-    if (localStorage.getItem("Username")) {
+    if (localStorage.getItem("Username") && isSessionValid()) {
       navigate("/feed");
+    } else {
+      navigate("/login");
     }
   }, [navigate]);
 
@@ -38,6 +40,18 @@ const Login = () => {
     return isValid;
   };
 
+  const isSessionValid = () => {
+    const expirationString = localStorage.getItem("Expiration");
+    if (!expirationString) {
+      return false;
+    }
+  
+    const expirationTime = new Date(expirationString);
+    const now = new Date();
+    return now < expirationTime;
+  };
+  
+
   var submitLogin = async (e) => {
     e.preventDefault();
     if (validateInput()) {
@@ -54,7 +68,12 @@ const Login = () => {
         });
   
         if (response.status === 200) {
+          const now = new Date();
+          const expirationTime = new Date(now.getTime() + 60 * 60 * 1000);
+
           localStorage.setItem("Email", email);
+          localStorage.setItem("Token_id", response.data.Token_id);
+          localStorage.setItem("Expiration", expirationTime.toISOString());
           navigate.push("/feed");
         }
       } catch (error) {

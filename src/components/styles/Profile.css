@@ -122,4 +122,20 @@
       gap: 5px;
     }
   }
+
+  .LogoutBtn {
+    display: flex;
+    justify-content: center;
+    width: 100%; 
+}
+
+  .logout-btn {
+    padding: 10px 20px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
   

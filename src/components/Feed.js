@@ -98,16 +98,30 @@ function Feed() {
     setPopupPostId(null);
   };
 
-  const addCommentToPost = (username, message) => {
-    const updatedPosts = posts.map(post => {
-      if (post.ID === popupPostId) {
-        const newComments = [...post.Comments, { Username: username, Message: message }];
-        return { ...post, Comments: newComments };
+  const addCommentToPost = (postId, message) => {
+    axios.post("https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/comment-post", {
+      post_id: popupPostId,
+      comment: message
+    },{
+      headers: {
+        'Bearer': `${localStorage.getItem("Token_id")}`,
+        'Content-Type': 'application/json'
       }
-      return post;
-    });
-    setPosts(updatedPosts);
-    closePopup();
+    })
+      .then(response => {
+        const updatedPosts = posts.map(post => {
+          if (post.ID === popupPostId) {
+            const newComments = [...post.Comments, { Username: response.data['commented_name'], Message: message }];
+            return { ...post, Comments: newComments };
+          }
+          return post;
+        });
+        setPosts(updatedPosts);
+        closePopup();
+      })
+      .catch(error => {
+        console.error('Error adding comment', error);
+      });
   };
 
   const [expandedPostId, setExpandedPostId] = useState(null);

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
@@ -13,7 +12,7 @@ function Signup() {
   const [errors, setErrors] = useState({});
   const [dbErrors, setDbErrors] = useState("");
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const validateInput = () => {
     const { firstname, lastname, email, password } = formData;
@@ -64,7 +63,10 @@ function Signup() {
         });
 
         console.log(response.data);
-        history.push({pathname: '/otpinput' , state: {email: formData.email} });
+        const dataToPass = {
+          email: formData.email
+        }
+        navigate( "/otpinput", {state: {...dataToPass} });
       } catch (error) {
         if (error.response && error.response.status === 409) {
           setDbErrors('User already exists.');

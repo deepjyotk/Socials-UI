@@ -87,7 +87,10 @@ const Login = () => {
               }
             });
             if (requestOtpResponse.status === 200) {
-              navigate({pathname: "/otpinput", state:{email: email}});
+              const dataToPass  = {
+                email: email
+              }; 
+              navigate( "/otpinput", {state: {...dataToPass} });
             }
           } else {
             setDbErrors("Something went wrong: " + error.response.data['message']); // Display specific backend error message if available

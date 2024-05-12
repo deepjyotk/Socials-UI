@@ -54,7 +54,7 @@ function OTPInput() {
 
       if (response.status === 200) {
         // Assuming 'push' is the path you want to navigate to after successful OTP
-        history.replace("/feed");
+        history("/login",{replace: true});
       }
     } catch (error) {
       alert("Failed to verify OTP. Please try again.");

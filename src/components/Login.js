@@ -71,9 +71,10 @@ const Login = () => {
           const now = new Date();
           const expirationTime = new Date(now.getTime() + 60 * 60 * 1000);
           console.log(expirationTime);
+          
 
           localStorage.setItem("Email", email);
-          localStorage.setItem("Token_id", response.data.Token_id);
+          localStorage.setItem("Token_id", response.data.data.AuthenticationResult.IdToken);
           localStorage.setItem("Expiration", expirationTime.toISOString());
           navigate("/feed");
         }

@@ -5,6 +5,7 @@ import CommentPopup from './CommentPopup.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserSearch from './Search';
+import CreatePostPopup from './CreatePostPopup';
 
 
 const dummyTimeline = [
@@ -37,7 +38,9 @@ const dummyTimeline = [
 function Feed() {
   const [posts, setPosts] = useState(dummyTimeline); // Use a state to manage posts for reactivity
   const [popupPostId, setPopupPostId] = useState(null); // null when no popup is shown
-  const [drawerOpen, setDrawerOpen] = useState(false); // State to toggle the drawer
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [createPostOpen, setCreatePostOpen] = useState(false);
+
   useEffect(() => {
     const userId = localStorage.getItem('userId'); // Assume the user's ID is stored in localStorage
     axios.get(`/api/feed/${userId}`)
@@ -71,6 +74,9 @@ function Feed() {
       Likes: updatedLikes
     };
     setPosts(updatedPosts);
+
+    
+
     /*
 
     
@@ -95,6 +101,25 @@ function Feed() {
     const currentUser = "user1"; // Simulating logged-in user
     return post.Likes.some(like => like.Username === currentUser);
   };
+
+  const toggleCreatePost = () => {
+    setCreatePostOpen(!createPostOpen);
+  };
+  const addPost = (newPost) => {
+    const newPosts = [
+        ...posts,
+        {
+            ID: posts.length + 1,
+            Username: "user1", // Assuming a static username for simplicity
+            Image: newPost.image,
+            Caption: newPost.caption,
+            Likes: [],
+            Comments: []
+        }
+    ];
+    setPosts(newPosts);
+    setCreatePostOpen(false);
+};
 
   /*
   const isLikedByCurrentUser = (post) => {
@@ -153,19 +178,25 @@ function Feed() {
 
   return (
     <div className="App">
+      <div className={`Content ${drawerOpen ? 'with-drawer' : 'full-width'}`}>
            <div className="Header">
         <button className="MenuButton" onClick={toggleDrawer}>☰</button>
         <img src="/socials-logo-2.png" alt="Instagram" />
         <Link to={`/profile/${localStorage.getItem('userId')}`} className="ProfileLink">My Profile</Link>
         <UserSearch />
       </div>
-      {drawerOpen && (
-        <div className="SideDrawer">
-          <Link to="/explore" className="DrawerItem">Explore</Link>
-          <Link to="/notifications" className="DrawerItem">Notifications</Link>
-          <button className="DrawerItem" onClick={() => alert('Upload functionality')}>Create (Upload)</button>
-        </div>
-      )}
+      <div className={`SideDrawer ${drawerOpen ? 'open' : ''}`}>
+        <Link to="/explore" className="DrawerItem">Explore</Link>
+        <Link to="/notifications" className="DrawerItem">Notifications</Link>
+        <button className="DrawerItem" onClick={toggleCreatePost}>Create (Upload)</button>
+            {createPostOpen && (
+                <CreatePostPopup
+                    onClose={() => setCreatePostOpen(false)}
+                    onSubmit={addPost}
+                />
+            )}
+      </div>
+      
       <div className="Posts">
         {posts.map(post => (
           <div key={post.ID} className="Post">
@@ -202,6 +233,7 @@ function Feed() {
             )}
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

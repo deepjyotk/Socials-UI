@@ -204,6 +204,7 @@ function Feed() {
                     onSubmit={addPost}
                 />
             )}
+        <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div>
       </div>
       
       <div className="Posts">

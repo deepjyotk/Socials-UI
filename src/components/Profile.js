@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import Lightbox from 'react-image-lightbox';
@@ -16,14 +16,17 @@ const Profile = () => {
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const fileInputRef = React.createRef();
+  const location = useLocation();
+  const userId = location.state?.user_id;
 
   // Dummy posts for demonstration
   const [posts, setPosts] = useState([]);
+  const currentUserEmail = localStorage.getItem("Email")
 
   useEffect(() => {
     // Simulate fetching profile
     const fetchProfile = async () => {
-      const userId = localStorage.getItem("Email") || "defaultUserId";
+      // const userId = localStorage.getItem("Email") || "defaultUserId";
       try {
         const response = await axios.post('https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/profile/abc', {
           user_id: userId
@@ -77,7 +80,9 @@ const Profile = () => {
         <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" />
         <div className="profile-info">
           <h1>{userProfile.username}</h1>
-          <button className="btn follow-btn">Follow</button>
+          {currentUserEmail !== userProfile.username && (
+            <button className="btn follow-btn">Follow</button>
+          )}
           <div className="stats">
             <p><strong>{posts.length}</strong> posts</p>
             <p><strong>{followers}</strong> followers</p>

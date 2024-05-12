@@ -158,13 +158,18 @@ function Feed() {
     navigate("/login");
   };
 
+  const handleUserClick = (username) => {
+    // Navigate with state
+    navigate(`/profile/${username}`, { state: { user_id: username }});
+  };
+
   return (
     <div className="App">
       <div className={`Content ${drawerOpen ? 'with-drawer' : 'full-width'}`}>
         <div className="Header">
           <button className="MenuButton" onClick={toggleDrawer}>☰</button>
           <img src="/socials-logo-2.png" alt="Instagram" />
-          <Link to={`/profile/${localStorage.getItem('userId')}`} className="ProfileLink">My Profile</Link>
+          <Link to={`/profile/abc/`} className="ProfileLink">My Profile</Link>
           <UserSearch />
         </div>
         <div className={`SideDrawer ${drawerOpen ? 'open' : ''}`}>
@@ -184,7 +189,9 @@ function Feed() {
           {posts.map(post => (
             <div key={post.ID} className="Post">
               <div className="PostHeader">
-                <Link to={`/profile/${post.Username}`} className="Username">{post.Username}</Link>
+                <span className="Username" onClick={() => handleUserClick(post.Username)} style={{ cursor: 'pointer' }}>
+                  {post.Username}
+                </span>
                 <div className="Logo">
                   <img src="/logo.png" alt="logo img" />
                 </div>

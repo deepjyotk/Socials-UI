@@ -86,7 +86,7 @@ const Profile = () => {
         </div>
       </header>
       <div className="gallery">
-        {posts.map((post, index) => (
+        {Array.isArray(posts) && posts.map((post, index) => (
           <div key={post.id} className="gallery-item" onClick={() => handleImageClick(index)}>
             <img src={post.imageUrl} alt={post.caption} />
           </div>

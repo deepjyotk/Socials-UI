@@ -11,26 +11,36 @@ const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '', avatar: '' });
-  const [newAvatar, setNewAvatar] = useState(null);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
-  const [posts, setPosts] = useState([]);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const fileInputRef = React.createRef();
 
+  // Dummy posts for demonstration
+  const [posts, setPosts] = useState([
+    { id: 1, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 1' },
+    { id: 2, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 2' },
+    { id: 3, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 3' },
+    { id: 4, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 4' },
+    { id: 5, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 5' },
+    { id: 6, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 6' },
+    { id: 7, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 7' },
+    { id: 8, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 8' },
+    // { id: 9, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 9' }
+  ]);
+
   useEffect(() => {
+    // Simulate fetching profile
     const fetchProfile = async () => {
       const username = id || localStorage.getItem("Username") || "user1";
       try {
-        const [profileRes, postsRes, followersRes, followingRes] = await Promise.all([
+        const [profileRes, followersRes, followingRes] = await Promise.all([
           axios.get(`/api/profile/${username}`),
-          axios.get(`/api/posts/${username}`),
           axios.get(`/api/followers/${username}`),
           axios.get(`/api/following/${username}`)
         ]);
         setUserProfile(profileRes.data);
-        setPosts(postsRes.data);
         setFollowers(followersRes.data.length);
         setFollowing(followingRes.data.length);
       } catch (error) {
@@ -40,25 +50,6 @@ const Profile = () => {
 
     fetchProfile();
   }, [id]);
-
-  const handleAvatarClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserProfile(prevState => ({
-          ...prevState,
-          avatar: reader.result
-        }));
-      };
-      reader.readAsDataURL(file);
-      setNewAvatar(file); // Optionally, you could upload this file to your server here
-    }
-  };
 
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
@@ -79,8 +70,7 @@ const Profile = () => {
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" onClick={handleAvatarClick} />
-        <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} accept="image/jpeg, image/png, image/jpg"/>
+        <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" />
         <div className="profile-info">
           <h1>{userProfile.username}</h1>
           <button className="btn follow-btn">Follow</button>
@@ -91,7 +81,7 @@ const Profile = () => {
           </div>
           <p className="bio">
             {userProfile.firstname} {userProfile.lastname}<br />
-            Lifestyle | Travel | Photography
+            {/* Lifestyle | Travel | Photography */}
           </p>
         </div>
       </header>

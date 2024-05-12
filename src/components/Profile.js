@@ -106,7 +106,7 @@ const Profile = () => {
           }
         />
       )}
-      <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div>
+      {/* <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div> */}
       <div className="home-button" onClick={() => navigate('/feed')}>
         <FontAwesomeIcon icon={faHome} size="2x" />
       </div>

@@ -5,6 +5,7 @@ import CommentPopup from './CommentPopup.js';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserSearch from './Search';
+import { useNavigate } from 'react-router-dom';
 
 
 const dummyTimeline = [
@@ -35,6 +36,7 @@ const dummyTimeline = [
 ];
 
 function Feed() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState(dummyTimeline); // Use a state to manage posts for reactivity
   const [popupPostId, setPopupPostId] = useState(null); // null when no popup is shown
   const [drawerOpen, setDrawerOpen] = useState(false); // State to toggle the drawer
@@ -150,6 +152,13 @@ function Feed() {
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("Email");
+    localStorage.removeItem("Token_id")
+    localStorage.removeItem("Expiration");
+    navigate("/login");
+  };
+
 
   return (
     <div className="App">
@@ -161,9 +170,12 @@ function Feed() {
       </div>
       {drawerOpen && (
         <div className="SideDrawer">
-          <Link to="/explore" className="DrawerItem">Explore</Link>
-          <Link to="/notifications" className="DrawerItem">Notifications</Link>
-          <button className="DrawerItem" onClick={() => alert('Upload functionality')}>Create (Upload)</button>
+          {/* <Link to="/explore" className="DrawerItem">Explore</Link> */}
+          {/* <Link to="/notifications" className="DrawerItem">Notifications</Link> */}
+
+          <button className="DrawerItem" onClick={() => alert('Upload functionality')}>Create</button>
+          <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div>
+
         </div>
       )}
       <div className="Posts">

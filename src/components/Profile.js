@@ -10,7 +10,7 @@ import './styles/Profile.css';
 const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '', avatar: '' });
+  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: ''});
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -18,31 +18,35 @@ const Profile = () => {
   const fileInputRef = React.createRef();
 
   // Dummy posts for demonstration
-  const [posts, setPosts] = useState([
-    { id: 1, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 1' },
-    { id: 2, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 2' },
-    { id: 3, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 3' },
-    { id: 4, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 4' },
-    { id: 5, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 5' },
-    { id: 6, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 6' },
-    { id: 7, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 7' },
-    { id: 8, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 8' },
-    // { id: 9, imageUrl: 'https://via.placeholder.com/300x300', caption: 'Caption 9' }
-  ]);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     // Simulate fetching profile
     const fetchProfile = async () => {
-      const username = id || localStorage.getItem("Username") || "user1";
+      const userId = localStorage.getItem("Email") || "defaultUserId";
       try {
-        const [profileRes, followersRes, followingRes] = await Promise.all([
-          axios.get(`/api/profile/${username}`),
-          axios.get(`/api/followers/${username}`),
-          axios.get(`/api/following/${username}`)
-        ]);
-        setUserProfile(profileRes.data);
-        setFollowers(followersRes.data.length);
-        setFollowing(followingRes.data.length);
+        const response = await axios.post('https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/profile/abc', {
+          user_id: userId
+        }, {
+          headers: {
+            'Bearer': `${localStorage.getItem("Token_id")}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        console.log(response)
+
+        setUserProfile({
+          firstname: response.data["First Name"],
+          lastname: response.data["Last Name"],
+          username: response.data["Email"],
+          // avatar: response.data.avatar
+        });
+        setFollowers(response.data["Followers"].length);
+        setFollowing(response.data["Following"].length);
+        setPosts(response.data["Image URLs"].map((url, index) => ({
+          id: index,
+          imageUrl: url
+        })));
       } catch (error) {
         console.error('Error fetching profile data', error);
       }

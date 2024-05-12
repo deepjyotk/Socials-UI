@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import UserSearch from './Search';
 import CreatePostPopup from './CreatePostPopup';
+import { useNavigate } from 'react-router-dom';
 
 
 const dummyTimeline = [
@@ -36,6 +37,7 @@ const dummyTimeline = [
 ];
 
 function Feed() {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState(dummyTimeline); // Use a state to manage posts for reactivity
   const [popupPostId, setPopupPostId] = useState(null); // null when no popup is shown
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -175,6 +177,13 @@ function Feed() {
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+  const handleLogout = () => {
+    localStorage.removeItem("Email");
+    localStorage.removeItem("Token_id")
+    localStorage.removeItem("Expiration");
+    navigate("/login");
+  };
+
 
   return (
     <div className="App">

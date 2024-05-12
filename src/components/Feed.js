@@ -37,7 +37,7 @@ const dummyTimeline = [
 function Feed() {
   const [posts, setPosts] = useState(dummyTimeline); // Use a state to manage posts for reactivity
   const [popupPostId, setPopupPostId] = useState(null); // null when no popup is shown
-
+  const [drawerOpen, setDrawerOpen] = useState(false); // State to toggle the drawer
   useEffect(() => {
     const userId = localStorage.getItem('userId'); // Assume the user's ID is stored in localStorage
     axios.get(`/api/feed/${userId}`)
@@ -147,15 +147,25 @@ function Feed() {
       </>
     );
   }; 
-  
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   return (
     <div className="App">
-      <div className="Header">
+           <div className="Header">
+        <button className="MenuButton" onClick={toggleDrawer}>☰</button>
         <img src="/socials-logo-2.png" alt="Instagram" />
         <Link to={`/profile/${localStorage.getItem('userId')}`} className="ProfileLink">My Profile</Link>
         <UserSearch />
       </div>
+      {drawerOpen && (
+        <div className="SideDrawer">
+          <Link to="/explore" className="DrawerItem">Explore</Link>
+          <Link to="/notifications" className="DrawerItem">Notifications</Link>
+          <button className="DrawerItem" onClick={() => alert('Upload functionality')}>Create (Upload)</button>
+        </div>
+      )}
       <div className="Posts">
         {posts.map(post => (
           <div key={post.ID} className="Post">

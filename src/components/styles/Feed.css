@@ -165,3 +165,50 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
+.MenuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: #262626;
+}
+
+.SideDrawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  z-index: 200; /* Ensure it's above other content */
+}
+
+.DrawerItem {
+  padding: 10px;
+  font-size: 18px;
+  color: #262626;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+
+.DrawerItem:hover {
+  background-color: #f0f0f0;
+}
+
+.App {
+  padding-left: 250px; /* Add padding to ensure content is not hidden behind drawer */
+}
+
+@media (max-width: 768px) {
+  .SideDrawer {
+    width: 100%;
+  }
+  .App {
+    padding-left: 0; /* Remove padding on smaller screens */
+  }
+}

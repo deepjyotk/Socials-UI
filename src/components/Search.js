@@ -1,98 +1,82 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import './styles/Search.css';
 import { useNavigate } from 'react-router-dom';
-import "./styles/Search.css";
 
-const UserSearch = () => {
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
-    const navigate = useNavigate();
 
-    // Dummy user data
-    const dummyUserData = [
-        {
-            id: 1,
-            username: "alice123",
-            firstname: "Alice",
-            lastname: "Johnson",
-            avatar: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Alice",
-        },
-        {
-            id: 2,
-            username: "bob456",
-            firstname: "Bob",
-            lastname: "Smith",
-            avatar: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Bob",
-        },
-        {
-            id: 3,
-            username: "carol789",
-            firstname: "Carol",
-            lastname: "Martinez",
-            avatar: "https://via.placeholder.com/150/008000/FFFFFF?text=Carol",
-        },
-        {
-            id: 4,
-            username: "david101",
-            firstname: "David",
-            lastname: "Lee",
-            avatar: "https://via.placeholder.com/150/F00FFF/FFFFFF?text=David",
-        },
-        {
-            id: 5,
-            username: "eve202",
-            firstname: "Eve",
-            lastname: "Taylor",
-            avatar: "https://via.placeholder.com/150/FFFF00/000000?text=Eve",
-        }
-    ];
+function UserSearch({ onSearchChange }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
+  const navigate = useNavigate();
+  const handleInputChange = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    if (query.length === 0) {
+      setShowSuggestions(false);
+    }
+  };
 
-    // Filter function to handle the search query
-    const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setQuery(value);
-        if (value.length > 2) {
-            /*
-            axios.post('/api/search', { name: query })
-                .then(response => {
-                    setResults(response.data);
-                })
-                .catch(error => console.error('Search failed', error));
-            */
-            const filteredResults = dummyUserData.filter(user =>
-                user.username.toLowerCase().includes(value.toLowerCase()) ||
-                user.firstname.toLowerCase().includes(value.toLowerCase()) ||
-                user.lastname.toLowerCase().includes(value.toLowerCase())
-            );
-            setResults(filteredResults);
-        } else {
-            setResults([]);
-        }
-    };
+  const handleSearchSubmit = async () => {
+    if (searchQuery.length > 0) {
+      try {
+        const response = await axios.post(
+          "https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/search",
+          { query_string: searchQuery },{
+            headers: {
+              'Bearer': `${localStorage.getItem("Token_id")}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+        setFilteredSuggestions(response.data.map(user => ({
+          id: user.user_id,
+          name: `${user.user_first_name} ${user.user_last_name}`
+        })));
+        setShowSuggestions(true);
+      } catch (error) {
+        console.error('Error fetching search suggestions:', error);
+        setShowSuggestions(false);  // Optionally handle errors more gracefully
+      }
+    } else {
+      setShowSuggestions(false);
+    }
+  };
 
-    const handleResultClick = (userId) => {
-        navigate(`/profile/${userId}`); // Navigate to the user's profile page when clicked
-    };
-
-    return (
-        <div className="search-container">
-            <input
-                type="text"
-                placeholder="Search users..."
-                value={query}
-                onChange={handleSearchChange}
-                className="search-input"
-            />
-            {results.length > 0 && (
-                <ul className="search-results">
-                    {results.map(user => (
-                        <li key={user.id} onClick={() => handleResultClick(user.id)} className="search-item">
-                            {user.username} - {user.firstname} {user.lastname}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-};
+  return (
+    <div className="SearchContainer">
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={handleInputChange}
+        className="SearchInput"
+        autoFocus
+      />
+      <button onClick={handleSearchSubmit} className="SearchButton">
+        🔍
+      </button>
+      {showSuggestions && (
+        <ul className="SuggestionsList">
+          {filteredSuggestions.map(user => (
+            <li key={user.id} onClick={() => {
+                if(user.id === localStorage.getItem("Email") )
+                    navigate(`/profile/${user.name}` );
+                else{
+                    navigate(`/profile/${user.name}`, { state: { user_id: user.id }});
+                }
+              
+              setSearchQuery(user.name);
+              setShowSuggestions(false);
+              onSearchChange(user.name);  // Optionally call onSearchChange on click
+            }}>
+              {user.name}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default UserSearch;

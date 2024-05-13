@@ -13,7 +13,19 @@ function Feed() {
   const [popupPostId, setPopupPostId] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [createPostOpen, setCreatePostOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // State to hold search query
+  
 
+   // Define handleSearchChange
+   const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    // if (!query) {
+    //   setFilteredPosts(posts); // If no query, show all posts
+    // } else {
+    //   const lowercasedQuery = query.toLowerCase();
+   
+    // }
+  };
   useEffect(() => {
     const token = localStorage.getItem("Token_id");
     if (!token) {
@@ -166,12 +178,22 @@ function Feed() {
   return (
     <div className="App">
       <div className={`Content ${drawerOpen ? 'with-drawer' : 'full-width'}`}>
-        <div className="Header">
-          <button className="MenuButton" onClick={toggleDrawer}>☰</button>
-          <img src="/socials-logo-2.png" alt="Instagram" />
-          <Link to={`/profile/abc/`} className="ProfileLink">My Profile</Link>
-          <UserSearch />
-        </div>
+      <div className="Header">
+  <button className="MenuButton" onClick={toggleDrawer}>☰</button>
+  <div className="HeaderLeft">
+    <img src="/socials-logo-2.png" alt="Logo" />
+  </div>
+ 
+
+  <div className="HeaderCenter">
+    <UserSearch onSearchChange={handleSearchChange} />
+  </div>
+  <div className="HeaderRight">
+    <Link to={`/profile/abc/`} className="ProfileLink">My Profile</Link>
+  </div>
+ 
+</div>
+
         <div className={`SideDrawer ${drawerOpen ? 'open' : ''}`}>
           <Link to="/explore" className="DrawerItem">Explore</Link>
           <Link to="/notifications" className="DrawerItem">Notifications</Link>

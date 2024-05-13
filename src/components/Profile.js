@@ -83,7 +83,7 @@ const Profile = () => {
       
       // setFollowers(followers_length);
       // setresponse.data["Followers"].length
-
+      setIsFollowing(!isFollowing);
 
       // Update followers count based on the response
       setFollowers(response.data["followers_length"]);

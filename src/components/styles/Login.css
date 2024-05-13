@@ -5,14 +5,14 @@ browser supported, best quality world class designs.*/
 body{
 	padding: 0;
 	margin: 0;
-	font-family: 'Dancing Script', cursive;
+	/* font-family: 'Dancing Script', cursive; */
 font-family: 'Montserrat', sans-serif;
 
 }
 h1{
 	text-align: center;
 	padding: 10px;
-	font-family: 'Dancing Script', cursive;
+	/* font-family: 'Dancing Script', cursive; */
 	font-size: 110px;
 }
 
@@ -148,9 +148,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f09433', end
     font-weight: bold !important;
 }
 
-.btn{
-	background-color: ;
-}
+
 
 
 

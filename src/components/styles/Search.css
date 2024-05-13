@@ -1,28 +1,44 @@
-.search-container {
+.SearchContainer {
     position: relative;
-}
-
-.search-results {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background: white;
+    display: flex;
+    align-items: center;
+  }
+  
+  .SearchInput {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 320px;
+    border-color: #9400d3;
+  }
+  
+  .SearchButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  
+  .SuggestionsList {
     position: absolute;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    top: 100%;
+    left: 0;
+    right: 0;
     z-index: 1000;
-}
-
-.search-item {
+    background: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .SuggestionsList li {
     padding: 8px 12px;
     cursor: pointer;
-    border-bottom: 1px solid #ccc;
-}
-
-.search-item:last-child {
-    border-bottom: none;
-}
-
-.search-item:hover {
+  }
+  
+  .SuggestionsList li:hover {
     background-color: #f0f0f0;
-}
+  }
+  

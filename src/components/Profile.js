@@ -10,23 +10,23 @@ import './styles/Profile.css';
 const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: ''});
+  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '' });
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [isFollowing, setIsFollowing] = useState(false); // State to track follow/unfollow
   const fileInputRef = React.createRef();
   const location = useLocation();
   const userId = location.state?.user_id;
 
   // Dummy posts for demonstration
   const [posts, setPosts] = useState([]);
-  const currentUserEmail = localStorage.getItem("Email")
+  const currentUserEmail = localStorage.getItem("Email");
 
   useEffect(() => {
     // Simulate fetching profile
     const fetchProfile = async () => {
-      // const userId = localStorage.getItem("Email") || "defaultUserId";
       try {
         const response = await axios.post('https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/profile/abc', {
           user_id: userId
@@ -50,13 +50,14 @@ const Profile = () => {
           id: index,
           imageUrl: url
         })));
+        setIsFollowing(response.data["isCurrentUserFollowing"]); // Set initial following status
       } catch (error) {
         console.error('Error fetching profile data', error);
       }
     };
 
     fetchProfile();
-  }, [id]);
+  }, [id, followers, following]);
 
   const handleImageClick = (index) => {
     setSelectedImageIndex(index);
@@ -65,6 +66,31 @@ const Profile = () => {
 
   const closeLightbox = () => {
     setOpenLightbox(false);
+  };
+
+  const handleFollowToggle = async () => {
+    try {
+      const response = await axios.post('https://vvkqufgiv7.execute-api.us-east-1.amazonaws.com/dev/follow', {
+        "otherUserID": userId
+      }, {
+        headers: {
+          'Bearer': `${localStorage.getItem("Token_id")}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      // Toggle the following state
+   
+      
+      // setFollowers(followers_length);
+      // setresponse.data["Followers"].length
+
+
+      // Update followers count based on the response
+      setFollowers(response.data["followers_length"]);
+      
+    } catch (error) {
+      console.error('Error toggling follow', error);
+    }
   };
 
   const handleLogout = () => {
@@ -81,7 +107,9 @@ const Profile = () => {
         <div className="profile-info">
           <h1>{userProfile.username}</h1>
           {currentUserEmail !== userProfile.username && (
-            <button className="btn follow-btn">Follow</button>
+            <button className="btn follow-btn" onClick={handleFollowToggle}>
+              {isFollowing ? 'Unfollow' : 'Follow'}
+            </button>
           )}
           <div className="stats">
             <p><strong>{posts.length}</strong> posts</p>
@@ -94,13 +122,18 @@ const Profile = () => {
           </p>
         </div>
       </header>
-      <div className="gallery">
-        {Array.isArray(posts) && posts.map((post, index) => (
-          <div key={post.id} className="gallery-item" onClick={() => handleImageClick(index)}>
-            <img src={post.imageUrl} alt={post.caption} />
-          </div>
-        ))}
-      </div>
+  
+      {/* Conditionally render the gallery */}
+      {(isFollowing || currentUserEmail === userProfile.username) && (
+        <div className="gallery">
+          {Array.isArray(posts) && posts.map((post, index) => (
+            <div key={post.id} className="gallery-item" onClick={() => handleImageClick(index)}>
+              <img src={post.imageUrl} alt={post.caption} />
+            </div>
+          ))}
+        </div>
+      )}
+  
       {openLightbox && (
         <Lightbox
           mainSrc={posts[selectedImageIndex].imageUrl}
@@ -115,12 +148,13 @@ const Profile = () => {
           }
         />
       )}
-      {/* <div className="LogoutBtn"><button onClick={handleLogout} className="logout-btn">Logout</button></div> */}
+  
       <div className="home-button" onClick={() => navigate('/feed')}>
         <FontAwesomeIcon icon={faHome} size="2x" />
       </div>
     </div>
   );
+  
 };
 
 export default Profile;

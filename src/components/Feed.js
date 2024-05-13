@@ -158,9 +158,9 @@ function Feed() {
     navigate("/login");
   };
 
-  const handleUserClick = (username) => {
+  const handleUserClick = (username, userId) => {
     // Navigate with state
-    navigate(`/profile/${username}`, { state: { user_id: username }});
+    navigate(`/profile/${username}`, { state: { user_id: userId }});
   };
 
   return (
@@ -189,7 +189,7 @@ function Feed() {
           {posts.map(post => (
             <div key={post.ID} className="Post">
               <div className="PostHeader">
-                <span className="Username" onClick={() => handleUserClick(post.Username)} style={{ cursor: 'pointer' }}>
+                <span className="Username" onClick={() => handleUserClick(post.Username, post.UserID)} style={{ cursor: 'pointer' }}>
                   {post.Username}
                 </span>
                 <div className="Logo">

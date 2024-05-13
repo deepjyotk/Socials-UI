@@ -6,11 +6,12 @@ import { faHome } from '@fortawesome/free-solid-svg-icons';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import './styles/Profile.css';
+import AWS from '../config/aws-config';
 
 const Profile = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '' });
+  const [userProfile, setUserProfile] = useState({ firstname: '', lastname: '', username: '', avatar: '' });
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0);
   const [openLightbox, setOpenLightbox] = useState(false);
@@ -19,10 +20,38 @@ const Profile = () => {
   const fileInputRef = React.createRef();
   const location = useLocation();
   const userId = location.state?.user_id;
+  const s3 = new AWS.S3();
 
   // Dummy posts for demonstration
   const [posts, setPosts] = useState([]);
   const currentUserEmail = localStorage.getItem("Email");
+
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const fileType = file.type.split('/')[1];
+      const email = localStorage.getItem('Email');
+      const sanitizedEmail = email.replace(/[@.]/g, '_');
+      const params = {
+        Bucket: 'socials-profile-pic-s3',
+        Key: `/${sanitizedEmail}/profile_pic.${fileType}`,  // Ensure the path is correct
+        Body: file
+      };
+
+      try {
+        const data = await s3.upload(params).promise();
+        console.log('Successfully uploaded avatar:', data.Location);
+        setUserProfile(prevState => ({ ...prevState, avatar: data.Location }));
+      } catch (err) {
+        console.error('Error uploading avatar:', err);
+        alert('Failed to upload avatar. Please try again.');
+      }
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();  // Trigger the hidden file input click
+  };
 
   useEffect(() => {
     // Simulate fetching profile
@@ -93,17 +122,22 @@ const Profile = () => {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("Email");
-    localStorage.removeItem("Token_id")
-    localStorage.removeItem("Expiration");
-    navigate("/login");
-  };
-
   return (
     <div className="profile-container">
       <header className="profile-header">
-        <img src={userProfile.avatar || 'https://via.placeholder.com/150'} alt="Avatar" className="profile-avatar" />
+        <img
+          src={ userProfile.avatar || 'https://via.placeholder.com/150'}
+          alt="Avatar"
+          className="profile-avatar"
+          onClick={triggerFileInput}
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleAvatarChange}
+        />
         <div className="profile-info">
           <h1>{userProfile.username}</h1>
           {currentUserEmail !== userProfile.username && (

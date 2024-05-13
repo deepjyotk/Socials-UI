@@ -13,7 +13,7 @@ spec:
         app: frontend
     spec:
       containers:
-      - image: safdarahmed/socials:v1.3
+      - image: safdarahmed/socials:v2.1
         imagePullPolicy: Always
         name: frontend
         ports:

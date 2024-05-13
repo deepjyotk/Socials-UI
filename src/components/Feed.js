@@ -197,7 +197,7 @@ function Feed() {
         <div className={`SideDrawer ${drawerOpen ? 'open' : ''}`}>
           <Link to="/explore" className="DrawerItem">Explore</Link>
           <Link to="/notifications" className="DrawerItem">Notifications</Link>
-          <button className="DrawerItem" onClick={toggleCreatePost}>Create (Upload)</button>
+          <button className="UploadButton" onClick={toggleCreatePost}>Create</button>
           {createPostOpen && (
             <CreatePostPopup
               onClose={() => setCreatePostOpen(false)}

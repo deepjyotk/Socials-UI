@@ -57,6 +57,22 @@
   transform: translateX(0);
 }
 
+.UploadButton {
+  background: none;         /* No background */
+  border: none;             /* No border */
+  font: inherit;            /* Inherit font from the environment */
+  cursor: pointer;          /* Keeps the pointer cursor to signify it's clickable */
+  outline: inherit;
+  padding: 10px;
+  font-size: 18px;
+  color: #262626;
+  text-decoration: none;
+  margin-bottom: 10px;
+  text-align: left; 
+}
+.UploadButton:hover {
+  background-color: #f0f0f0;
+}
 
 .Content.full-width {
   width: 100%;

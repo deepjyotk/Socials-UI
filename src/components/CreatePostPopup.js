@@ -49,21 +49,25 @@ function CreatePostPopup({ onClose, onSubmit }) {
         <div className="CreatePostPopup">
             <div className="PopupContent">
                 <button onClick={onClose} className="CloseButton">X</button>
-                <form onSubmit={handleSubmit}>
+                <form className="Popup"  onSubmit={handleSubmit}>
+                    <div className="text-input-container">
                     <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageChange}
                         required
                     />
-                    <input
+                    <textarea
                         type="text"
                         value={caption}
+                        rows="4"
+                        cols="35"
                         onChange={handleCaptionChange}
                         placeholder="Caption"
                         required
                     />
-                    <button type="submit">Create Post</button>
+                    <button className='create' type="submit">Create Post</button>
+                    </div>
                 </form>
             </div>
         </div>

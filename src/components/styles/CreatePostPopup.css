@@ -25,3 +25,38 @@
     font-size: 16px;
     cursor: pointer;
 }
+
+.Popup {
+    margin-left: 30%;
+    width: 500px;
+    height: 200px;
+}
+
+textarea {
+    width: 60%;
+    height: 80px;  
+    padding: 8px;  
+    font-size: 16px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+}
+
+input {
+    padding-bottom: 10px;
+}
+
+.text-input-container {
+    margin: auto;
+}
+
+.create {
+    width: 60%; /* Match width of textarea */
+    padding: 10px 0; /* Padding for better touch area */
+    font-size: 16px; /* Match font size of textarea */
+    border-radius: 4px; /* Match border radius of textarea */
+    margin-top: 10px; /* Space between textarea and button */
+    cursor: pointer; /* Pointer cursor on hover */
+    border: none; /* No border */
+    background-color: #9400d3; /* Example blue background */
+    color: white; /* White text */
+}
